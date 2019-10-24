@@ -12,6 +12,7 @@ public class Game {
     private String cover;
     private String name;
     private String published;
+    private String addedToDb;
     private int minPlayers;
     private int maxPlayers;
     private int minPlaytime;
@@ -27,26 +28,10 @@ public class Game {
     public Game() {
     }
 
-    public Game(long id, String cover, String name, String published, int minPlayers, int maxPlayers, int minPlaytime, int maxPlaytime, double rating, int ranking, double weight, Set<User> users) {
-        this.id = id;
-        this.cover = cover;
-        this.name = name;
-        this.published = published;
-        this.minPlayers = minPlayers;
-        this.maxPlayers = maxPlayers;
-        this.minPlaytime = minPlaytime;
-        this.maxPlaytime = maxPlaytime;
-        this.rating = rating;
-        this.ranking = ranking;
-        this.weight = weight;
-        this.users = users;
-    }
 
-    public Game(long id, String cover, String name, String published) {
-        this.id = id;
-        this.cover = cover;
-        this.name = name;
-        this.published = published;
+
+    public void setAddedToDb(String addedToDb) {
+        this.addedToDb = addedToDb;
     }
 
     public Set<User> getUsers() {
@@ -152,6 +137,15 @@ public class Game {
                 ", cover='" + cover + '\'' +
                 ", name='" + name + '\'' +
                 ", published='" + published + '\'' +
+                ", addedToDb='" + addedToDb + '\'' +
+                ", minPlayers=" + minPlayers +
+                ", maxPlayers=" + maxPlayers +
+                ", minPlaytime=" + minPlaytime +
+                ", maxPlaytime=" + maxPlaytime +
+                ", rating=" + rating +
+                ", ranking=" + ranking +
+                ", weight=" + weight +
+                ", users=" + users +
                 '}';
     }
 }

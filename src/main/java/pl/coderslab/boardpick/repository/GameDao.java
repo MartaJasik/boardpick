@@ -22,19 +22,17 @@ public class GameDao {
     @PersistenceContext
     EntityManager entityManager;
 
-    //public void saveGame(Game entity) {
-    //    entityManager.persist(entity);
-   // }
 
     public void saveGame(Game entity) {
     //jeśli gra istnieje w bazie - dodać tylko usera do listy. jeśli nei istnieje - dodac cala gre i usera do listy
-        if (findById(entity.getId()) == null) {
-            entityManager.persist(entity);
-        } else {
-            Set<User> users = entity.getUsers();
+        if (findById(entity.getId()) != null) {
+            Set<User> users = findById(entity.getId()).getUsers();
             User user = userDao.findById(userDao.currentUserId());
             users.add(user);
+            entity.setUsers(users);
             update(entity);
+        } else {
+            entityManager.persist(entity);
         }
     }
 
@@ -51,19 +49,8 @@ public class GameDao {
         Set<User> users = entity.getUsers();
         User user = userDao.findById(userDao.currentUserId());
         users.remove(user);
-          /*      entity.setUsers(users);
-        entityManager.remove(entityManager.contains(entity) ?
-                entity : entityManager.merge(entity));*/
+
     }
-
-  public List<Game> findAll() {
-    Query query = entityManager.createQuery("SELECT a FROM Game a");
-    //  Long currentUserId = userDao.currentUserId();
-
-
-      return query.getResultList();
-
-  }
 
 
 

@@ -1,4 +1,4 @@
-package pl.coderslab.validation;
+package pl.coderslab.boardpick.validation;
 
 
 public interface LoginValidationGroup {

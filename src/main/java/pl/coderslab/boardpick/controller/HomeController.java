@@ -39,16 +39,18 @@ public class HomeController {
 
     @GetMapping("/picker")
     public String pick() {
-        return "picker";
+        return "form/pickgame";
     }
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String login() {
-       //User user = new User("admin", "pass");
 
-       //userService.saveUser(user);
+        return "form/login";
+    }
 
-        return "admin/login";
+    @ModelAttribute("recentGames")
+    public List<Game> getRecentGames() {
+        return gameRepository.findAllByOrderByAddedToDbDesc();
     }
 
 

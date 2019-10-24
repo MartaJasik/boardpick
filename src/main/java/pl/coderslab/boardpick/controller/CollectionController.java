@@ -9,15 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.boardpick.entity.CurrentUser;
 import pl.coderslab.boardpick.entity.Game;
 import pl.coderslab.boardpick.entity.User;
-import pl.coderslab.boardpick.repository.GameDao;
-import pl.coderslab.boardpick.repository.GameRepository;
-import pl.coderslab.boardpick.repository.UserDao;
-import pl.coderslab.boardpick.repository.UserRepository;
+import pl.coderslab.boardpick.repository.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static pl.coderslab.boardpick.XMLscrapper.Scrapper.*;
 
@@ -45,7 +39,7 @@ public class CollectionController {
     @GetMapping("/collection/find/{id}")
     @ResponseBody
     public String find(@PathVariable Long id) {
-        return "Znaleziona książka: " + gameDao.findById(id).toString();
+        return "Znaleziona gra: " + gameDao.findById(id).toString();
     }
 
     @GetMapping("/collection/delete/{id}")
@@ -75,11 +69,13 @@ public class CollectionController {
 
     @GetMapping("/collection/add/{id}")
     public String add(@PathVariable String id) {
+        Utilities utilities = new Utilities();
         Long userId = userDao.currentUserId();
         final Game game = getGameLong(id);
         Set<User> users = new HashSet<>();
         users.add(userDao.findById(userId));
         game.setUsers(users);
+        game.setAddedToDb(utilities.thisDate());
         gameDao.saveGame(game);
 
         return "redirect:/collection";

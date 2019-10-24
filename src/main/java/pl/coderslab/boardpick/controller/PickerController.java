@@ -1,23 +1,23 @@
 package pl.coderslab.boardpick.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.boardpick.entity.CurrentUser;
 import pl.coderslab.boardpick.entity.Game;
 import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static pl.coderslab.boardpick.XMLscrapper.Scrapper.*;
 
 @Controller
-@RequestMapping("/")
-public class CollectionController {
+@RequestMapping("/pickgame")
+public class PickerController {
 
     @Autowired
     private GameDao gameDao;

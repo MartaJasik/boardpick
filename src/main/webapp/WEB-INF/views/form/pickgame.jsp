@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -9,22 +10,65 @@
 <jsp:include page="../header.jsp"/>
 <div class="container-fluid" style="margin-top:30px">
 
-    <h3>Look for a game to add!</h3>
-
+    <h3>Look for a game to play!</h3>
+<br>
     <form method="post">
-        <div class="form-row align-items-center">
-            <div class="col-sm-3 my-1">
-                <input type="text" class="form-control" id="inlineFormInputName" placeholder="Title" name="title">
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="category">I wanna</label>
+                    <select id="category" class="form-control">
+                        <sec:authorize access="isAuthenticated()">
+                            <option selected>Play something I own</option>
+                            <option>Find a new game</option>
+                        </sec:authorize>
+                        <sec:authorize access="!isAuthenticated()">
+                            <option selected>Find a new game</option>
+                            <option disabled>Play something I own</option>
+                        </sec:authorize>
+
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="players">Players</label>
+                    <select id="players" class="form-control">
+                        <option>1</option>
+                        <option selected>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>>6</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="weight">Weight</label>
+                    <select id="weight" class="form-control">
+                        <option>Easy</option>
+                        <option selected>Easy to Medium</option>
+                        <option>Medium</option>
+                        <option>Medium to Hardcore</option>
+                        <option>Hardcore</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="time">Time</label>
+                    <select id="time" class="form-control">
+                        <option selected>Quick (<30min)</option>
+                        <option>Quick-Standard (<60min)</option>
+                        <option>Standard (30-60min)</option>
+                        <option>Long (>1h)</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-auto my-1">
-                <input type="submit" value="Submit" class="btn btn-outline-light">
-            </div>
+            <button type="submit" class="btn btn btn-light">Show me the games!</button>
+
             <input type="hidden"
                    name="${_csrf.parameterName}"
                    value="${_csrf.token}"/>
         </div>
     </form>
-
+<br>
 
         <h4> Found: </h4>
     <table class="table table-hover">

@@ -1,6 +1,11 @@
 package pl.coderslab.boardpick.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+import pl.coderslab.boardpick.validation.LoginValidationGroup;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 import java.util.Set;
 
 @Entity
@@ -10,8 +15,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @NotBlank(groups = {Default.class})
+    @Size(min = 5, max = 30, message = "Must contain 5-30 characters", groups = {Default.class})
+    @Column(unique = true)
     private String username;
+    @NotBlank(groups = {Default.class})
+    @Size(min = 5, message = "Must contain 5-30 characters", groups = {Default.class})
     private String password;
     private int enabled;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -75,6 +84,17 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                '}';
     }
 }
 

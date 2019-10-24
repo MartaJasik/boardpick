@@ -1,4 +1,4 @@
-package pl.coderslab.warsztatSamochodowyFinal.dao;
+package pl.coderslab.boardpick.repository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -36,11 +36,6 @@ public class CollectionController {
         return "collection";
     }
 
-    @GetMapping("/collection/find/{id}")
-    @ResponseBody
-    public String find(@PathVariable Long id) {
-        return "Znaleziona gra: " + gameDao.findById(id).toString();
-    }
 
     @GetMapping("/collection/delete/{id}")
     public String delete(@PathVariable Long id) {
@@ -83,10 +78,18 @@ public class CollectionController {
 
     @ModelAttribute("mygames")
     public Set<Game> getMyGames() {
-       // return gameDao.findAll();
+        // return gameDao.findAll();
         Long currentUserId = userDao.currentUserId();
         User user = userDao.findById(currentUserId);
         return gameRepository.findByUsersContains(user);
+    }
+
+    @ModelAttribute("count")
+    public Integer howManyIOwn() {
+        Long currentUserId = userDao.currentUserId();
+        User user = userDao.findById(currentUserId);
+        Set<Game> mySet = gameRepository.findByUsersContains(user);
+        return mySet.size();
     }
 
 }

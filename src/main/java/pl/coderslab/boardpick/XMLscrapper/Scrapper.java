@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 import pl.coderslab.boardpick.entity.Game;
 
@@ -37,7 +38,7 @@ public class Scrapper {
                     idsFound.add(matcher.group(1));
                 }
             }
-            if ( idsFound.size() > 10 ) {
+            if (idsFound.size() > 10) {
                 firstTenIdsFound = idsFound.subList(0, 10);
             } else {
                 firstTenIdsFound = idsFound;
@@ -102,6 +103,85 @@ public class Scrapper {
         return game;
     }
 
+    public static List<String> advancedFinder(String players, String weight, String time) {
+        List<String> idsFound = new ArrayList<>();
+        List<String> firstTenIdsFound = new ArrayList<>();
+        String weightMin = "";
+        String weightMax = "";
+        switch (weight) {
+            case "easy":
+                weightMin = "1";
+                weightMax = "2";
+                break;
+            case "easymedium":
+                weightMin = "1";
+                weightMax = "3";
+                break;
+            case "medium":
+                weightMin = "2";
+                weightMax = "3";
+                break;
+            case "mediumhard":
+                weightMin = "2";
+                weightMax = "5";
+                break;
+            case "hard":
+                weightMin = "3";
+                weightMax = "5";
+                break;
+            case "dontcare":
+                weightMin = "1";
+                weightMax = "5";
+                break;
+        }
 
+        String timeMin = "";
+        String timeMax = "";
+        switch (time) {
+            case "quick":
+                timeMin = "0";
+                timeMax = "30";
+                break;
+            case "quickstandard":
+                timeMin = "0";
+                timeMax = "60";
+                break;
+            case "standard":
+                timeMin = "30";
+                timeMax = "60";
+                break;
+            case "long":
+                timeMin = "60";
+                timeMax = "180";
+                break;
+            case "dontcare":
+                timeMin = "0";
+                timeMax = "180";
+                break;
+        }
+
+        try {
+            org.jsoup.nodes.Document doc = Jsoup.connect("https://boardgamegeek.com/geeksearch.php?action=search&advsearch=1&objecttype=boardgame&q=&include%5Bdesignerid%5D=&geekitemname=&geekitemname=&include%5Bpublisherid%5D=&range%5Byearpublished%5D%5Bmin%5D=&range%5Byearpublished%5D%5Bmax%5D=&range%5Bminage%5D%5Bmax%5D=&floatrange%5Bavgrating%5D%5Bmin%5D=&floatrange%5Bavgrating%5D%5Bmax%5D=&range%5Bnumvoters%5D%5Bmin%5D=&floatrange%5Bavgweight%5D%5Bmin%5D=" + weightMin + "&floatrange%5Bavgweight%5D%5Bmax%5D=" + weightMax + "&range%5Bnumweights%5D%5Bmin%5D=&colfiltertype=&searchuser=&nosubtypes%5B%5D=boardgameexpansion&range%5Bminplayers%5D%5Bmax%5D=" + players + "&range%5Bmaxplayers%5D%5Bmin%5D=" + players + "&playerrangetype=normal&range%5Bleastplaytime%5D%5Bmin%5D=" + timeMin + "&range%5Bplaytime%5D%5Bmax%5D=" + timeMax + "&B1=Submit").get();
+            Elements newsHeadlines = doc.select(".collection_objectname");
+            for (Element headline : newsHeadlines) {
+                final String url = headline.select("a").attr("href");
+                // System.out.println(url);
+                Pattern pattern = Pattern.compile("^\\/boardgame\\/(.*)\\/.*$");
+                Matcher matcher = pattern.matcher(url);
+                while (matcher.find()) {
+                    idsFound.add(matcher.group(1));
+                }
+            }
+            if (idsFound.size() > 10) {
+                firstTenIdsFound = idsFound.subList(0, 10);
+            } else {
+                firstTenIdsFound = idsFound;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return firstTenIdsFound;
+    }
 
 }

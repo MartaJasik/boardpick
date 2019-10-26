@@ -7,7 +7,7 @@ import pl.coderslab.boardpick.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
-    User findById(long id);
+    User findFirstById(long id);
 
 
 }

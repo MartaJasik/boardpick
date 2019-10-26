@@ -14,12 +14,12 @@
     <div class="form-group row">
     <label for="password" class="col-sm-2 col-form-label"> Password: </label>
     <div class="col-sm-4">
-    <form:input path="password" id="password" name="password" class="form-control" placeholder="Password"/><form:errors
+    <form:password path="password" id="password" name="password" class="form-control" placeholder="Password"/><form:errors
         path="password"/></div>
     </div>
     <div class="form-group row">
     <div class="col-sm-8">
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn btn-light">Register</button>
     </div>
 
     </div>

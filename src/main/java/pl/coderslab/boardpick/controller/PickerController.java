@@ -12,11 +12,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static pl.coderslab.boardpick.XMLscrapper.Scrapper.*;
 
 @Controller
-@RequestMapping("/pickgame")
+@RequestMapping("/picker")
 public class PickerController {
 
     @Autowired
@@ -31,59 +32,102 @@ public class PickerController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/collection")
+    @GetMapping("/")
     public String collection() {
-        return "collection";
-    }
-
-    @GetMapping("/collection/find/{id}")
-    @ResponseBody
-    public String find(@PathVariable Long id) {
-        return "Znaleziona gra: " + gameDao.findById(id).toString();
-    }
-
-    @GetMapping("/collection/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        gameDao.delete(id);
-
-        return "redirect:/collection";
-    }
-
-    @GetMapping("/collection/addgame")
-    public String addGameForm() {
-        return "form/addgame";
+        return "form/pickgame";
     }
 
 
-    @PostMapping("/collection/addgame")
-    public String saveGameForm(@RequestParam String title, Model model) {
-        List<String> tenFound = findFirstTen(title);
-        List<Game> gamesFound = new ArrayList<>();
-        for (String id : tenFound) {
-            gamesFound.add(getGameShort(id));
+    @PostMapping
+    public String pickGame(@RequestParam String category, @RequestParam String players, @RequestParam String weight, @RequestParam String time, Model model) {
+        if (category.equals("mine")) {
+            Set<Game> myGames = getMyGames();
+            Integer intPlayers = Integer.parseInt(players);
+            final Integer weightMin;
+            final Integer weightMax;
+            switch (weight) {
+                case "easy":
+                    weightMin = 1;
+                    weightMax = 2;
+                    break;
+                case "easymedium":
+                    weightMin = 1;
+                    weightMax = 3;
+                    break;
+                case "medium":
+                    weightMin = 2;
+                    weightMax = 3;
+                    break;
+                case "mediumhard":
+                    weightMin = 2;
+                    weightMax = 5;
+                    break;
+                case "hard":
+                    weightMin = 3;
+                    weightMax = 5;
+                    break;
+                case "dontcare":
+                    weightMin = 1;
+                    weightMax = 5;
+                    break;
+                default:
+                    weightMin = 1;
+                    weightMax = 5;
+            }
+
+            final Integer timeMin;
+            final Integer timeMax;
+            switch (time) {
+                case "quick":
+                    timeMin = 0;
+                    timeMax = 30;
+                    break;
+                case "quickstandard":
+                    timeMin = 0;
+                    timeMax = 60;
+                    break;
+                case "standard":
+                    timeMin = 30;
+                    timeMax = 60;
+                    break;
+                case "long":
+                    timeMin = 60;
+                    timeMax = 180;
+                    break;
+                case "dontcare":
+                    timeMin = 0;
+                    timeMax = 180;
+                    break;
+                default:
+                    timeMin = 0;
+                    timeMax = 180;
+            }
+
+            Set<Game> foundMyGames = myGames.stream()
+                    .filter(p -> p.getMinPlayers() <= intPlayers)
+                    .filter(p -> p.getMaxPlayers() >= intPlayers)
+                    .filter(p -> p.getMinPlaytime() <= timeMin || p.getMinPlaytime() <= timeMax)
+                    .filter(p -> p.getMaxPlaytime() >= timeMax || p.getMinPlaytime() >= timeMin)
+                    .filter(p -> p.getWeight() >= weightMin)
+                    .filter(p -> p.getWeight() <= weightMax)
+                    .collect(Collectors.toSet());
+
+            model.addAttribute("games", foundMyGames);
+
+        } else if (category.equals("new")){
+            List<String> tenFound = advancedFinder(players, weight, time);
+
+            List<Game> gamesFound = new ArrayList<>();
+            for (String id : tenFound) {
+                gamesFound.add(getGameLong(id));
+            }
+            model.addAttribute("games", gamesFound);
         }
-        model.addAttribute("games", gamesFound);
-        return "form/addgame";
+        return "form/pickgame";
     }
 
 
-    @GetMapping("/collection/add/{id}")
-    public String add(@PathVariable String id) {
-        Utilities utilities = new Utilities();
-        Long userId = userDao.currentUserId();
-        final Game game = getGameLong(id);
-        Set<User> users = new HashSet<>();
-        users.add(userDao.findById(userId));
-        game.setUsers(users);
-        game.setAddedToDb(utilities.thisDate());
-        gameDao.saveGame(game);
-
-        return "redirect:/collection";
-    }
-
-    @ModelAttribute("mygames")
     public Set<Game> getMyGames() {
-       // return gameDao.findAll();
         Long currentUserId = userDao.currentUserId();
         User user = userDao.findById(currentUserId);
         return gameRepository.findByUsersContains(user);

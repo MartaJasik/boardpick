@@ -9,9 +9,7 @@
 <jsp:include page="header.jsp"/>
 <div class="container-fluid" style="margin-top:30px">
 
-    <h3>My collection</h3>
-    <p>of ${count} games</p>
-    <a class="btn btn-light" href="/collection/addgame">Add another!</a>
+    <h3>${user.username}'s collection</h3>
 
 <br>
    <br>
@@ -33,34 +31,32 @@
         </thead>
 
         <tbody>
-        <c:forEach var="myGame" items="${mygames}">
+        <c:forEach var="usersGame" items="${userGames}">
             <tr>
-                <td><a href="https://boardgamegeek.com/boardgame/${myGame.id}"><img height="100px"
-                                                                                    src="${myGame.cover}"></td>
-                <td>${myGame.name}</td>
-                <td>${myGame.published}</td>
+                <td><a href="https://boardgamegeek.com/boardgame/${usersGame.id}"><img height="100px"
+                                                                                    src="${usersGame.cover}"></td>
+                <td>${usersGame.name}</td>
+                <td>${usersGame.published}</td>
                 <td><c:choose>
-                    <c:when test="${myGame.minPlayers eq myGame.maxPlayers}">
-                        ${myGame.minPlayers}
+                    <c:when test="${usersGame.minPlayers eq usersGame.maxPlayers}">
+                        ${usersGame.minPlayers}
                     </c:when>
                     <c:otherwise>
-                        ${myGame.minPlayers}-${myGame.maxPlayers}
+                        ${usersGame.minPlayers}-${usersGame.maxPlayers}
                     </c:otherwise>
                 </c:choose></td>
                 <td><c:choose>
-                    <c:when test="${myGame.minPlaytime eq myGame.maxPlaytime}">
-                        ${myGame.minPlaytime} min
+                    <c:when test="${usersGame.minPlaytime eq usersGame.maxPlaytime}">
+                        ${usersGame.minPlaytime} min
                     </c:when>
                     <c:otherwise>
-                        ${myGame.minPlaytime}-${myGame.maxPlaytime} min
+                        ${usersGame.minPlaytime}-${usersGame.maxPlaytime} min
                     </c:otherwise>
                 </c:choose></td>
-                <td>${myGame.rating}</td>
-                <td>${myGame.ranking}</td>
-                <td>${myGame.weight}/5</td>
-                <td><a class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure to delete ${myGame.name} from your collection?')"
-                       href="/collection/delete/${myGame.id}">Delete</a></td>
+                <td>${usersGame.rating}</td>
+                <td>${usersGame.ranking}</td>
+                <td>${usersGame.weight}/5</td>
+                <td><a class="btn btn-success btn-sm" href="/collection/add/${usersGame.id}">I have it too!</a></td>
             </tr>
         </c:forEach>
         </tbody>

@@ -11,6 +11,7 @@ import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.GameDao;
 import pl.coderslab.boardpick.repository.GameRepository;
 import pl.coderslab.boardpick.repository.UserDao;
+import pl.coderslab.boardpick.repository.UserRepository;
 import pl.coderslab.boardpick.service.UserService;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class HomeController {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserDao userDao;
@@ -50,7 +54,12 @@ public class HomeController {
 
     @ModelAttribute("recentGames")
     public List<Game> getRecentGames() {
-        return gameRepository.findAllByOrderByAddedToDbDesc();
+        return gameRepository.findFirst10ByOrderByAddedToDbDesc();
+    }
+
+    @ModelAttribute("users")
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
 

@@ -9,7 +9,11 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         body {
-            background: linear-gradient(to right, purple, hotpink) !important;
+            background: linear-gradient(to top, #370047, purple) !important;
+        }
+
+        h5 {
+            color: gainsboro;
         }
 
         .img-responsive {
@@ -49,6 +53,18 @@
                     <a href="https://boardgamegeek.com/boardgame/${recentGame.id}">
                         <img src="${recentGame.cover}" alt="${recentGame.name}" class="img-responsive">
                         </a>
+                </div>
+            </c:forEach>
+        </div>
+        <br><br>
+        <h5>Boardpick Users</h5>
+        <br>
+        <div class="row image-container">
+            <c:forEach var="user" items="${users}">
+                <div class="thumbnail img-responsive">
+                    <a class="btn btn-dark btn-sm" href="/userCollection/${user.id}">
+                        ${user.username}
+                    </a>
                 </div>
             </c:forEach>
         </div>

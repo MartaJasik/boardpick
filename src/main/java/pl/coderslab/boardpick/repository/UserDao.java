@@ -20,22 +20,8 @@ public class UserDao {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void saveUser(User entity) {
-        entityManager.persist(entity);
-    }
-
-    public void update(User entity) {
-        entityManager.merge(entity);
-    }
-
     public User findById(long id) {
         return entityManager.find(User.class, id);
-    }
-
-    public void delete(long id) {
-        User entity = findById(id);
-        entityManager.remove(entityManager.contains(entity) ?
-                entity : entityManager.merge(entity));
     }
 
 
@@ -46,11 +32,6 @@ public class UserDao {
         return userId;
     }
 
-  /*public List<User> findAll() {
-      Query query = entityManager.createQuery("SELECT a FROM User a");
-      return query.getResultList();
-
-  }*/
 
 
 }

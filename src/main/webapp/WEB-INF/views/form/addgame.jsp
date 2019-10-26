@@ -26,29 +26,31 @@
     </form>
 
 
-        <h4> Found: </h4>
-    <table class="table table-hover">
+    <h4> Found: </h4>
+    <table id="table" data-toggle="table" class="table table-hover borderless">
+        <thead>
         <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Cover</th>
-            <th scope="col">Name</th>
-            <th scope="col">Published</th>
-
+            <th scope="col" data-field="id" data-sortable="false">ID</th>
+            <th scope="col" data-field="cover" data-sortable="false">Cover</th>
+            <th scope="col" data-field="name" data-sortable="true">Name</th>
+            <th scope="col" data-field="published" data-sortable="true">Published</th>
             <th></th>
-
         </tr>
+        </thead>
 
+        <tbody>
         <c:forEach var="game" items="${games}">
-        <tr>
-            <td>${game.id}</td>
-            <td><a href="https://boardgamegeek.com/boardgame/${game.id}"><img height="100px" src="${game.cover}"></a></td>
-            <td>${game.name}</td>
-            <td>${game.published}</td>
-            <td><a class="btn btn-primary btn-sm" href="/collection/add/${game.id}">Dodaj do kolekcji</a></td>
-        </tr>
+            <tr>
+                <td>${game.id}</td>
+                <td><a href="https://boardgamegeek.com/boardgame/${game.id}"><img height="100px"
+                                                                                  src="${game.cover}"></a></td>
+                <td>${game.name}</td>
+                <td>${game.published}</td>
+                <td><a class="btn btn-primary btn-sm" href="/collection/add/${game.id}">Add to my collection</a></td>
+            </tr>
         </c:forEach>
-
-        </table>
+        </tbody>
+    </table>
 </div>
 <jsp:include page="../footer.jsp"/>
 

@@ -17,14 +17,6 @@ public interface PlayRepository extends JpaRepository<Play, Long> {
     Integer countPlaysByGame(Game game);
     List<Play> findAllByGame(Game game);
 
-   /* @Query(value = "SELECT WINNER, COUNT(*) AS Frequency" +
-            "    FROM Plays" +
-            "    GROUP BY WINNER" +
-            "    ORDER BY COUNT(*) DESC" +
-            "    FETCH FIRST 1 ROW ONLY"
-            ,
-            nativeQuery = true)
-    User countGameWinner();*/
 
 
 }

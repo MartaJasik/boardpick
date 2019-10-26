@@ -13,8 +13,8 @@
     <p>of ${count} games</p>
     <a class="btn btn-light" href="/collection/addgame">Add another!</a>
 
-<br>
-   <br>
+    <br>
+    <br>
 
     <table id="table" data-toggle="table" class="table table-hover borderless">
         <thead>
@@ -27,6 +27,7 @@
             <th scope="col" data-field="rating" data-sortable="true">Rating</th>
             <th scope="col" data-field="ranking" data-sortable="true">Ranking</th>
             <th scope="col" data-field="weight" data-sortable="true">Weight</th>
+            <th></th>
             <th></th>
 
         </tr>
@@ -58,9 +59,14 @@
                 <td>${myGame.rating}</td>
                 <td>${myGame.ranking}</td>
                 <td>${myGame.weight}/5</td>
+                <td><a class="btn btn-success btn-sm"
+                       href="/gamestats/${myGame.id}">Game stats</a>
+                </td>
                 <td><a class="btn btn-danger btn-sm"
                        onclick="return confirm('Are you sure to delete ${myGame.name} from your collection?')"
-                       href="/collection/delete/${myGame.id}">Delete</a></td>
+                       href="/collection/delete/${myGame.id}">Delete</a>
+                </td>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

@@ -26,7 +26,7 @@
                 </form:select>
             </div>
             <div class="form-group">
-                <label for="players">Players (hold ctr to choose >1)</label>
+                <label for="players">Players</label>
                 <form:select multiple="true" class="form-control" path="players" id="players">
                     <c:forEach var="user" items="${users}">
                         <form:option value="${user.id}">${user.username}</form:option>

@@ -27,10 +27,20 @@ public class UserDao {
 
     public Long currentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Long userId = ((CurrentUser)authentication.getPrincipal()).getUserId();
+
+        return userId;
+    }
+
+ /*   public Long currentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CurrentUser currentUser = (CurrentUser)authentication.getPrincipal();
         Long userId = currentUser.getUserId();
         return userId;
-    }
+    }*/
+
+
 
 
 

@@ -48,9 +48,8 @@
         <br>
         <div class="row image-container">
             <c:forEach var="recentGame" items="${recentGames}">
-
                 <div class="thumbnail">
-                    <a href="https://boardgamegeek.com/boardgame/${recentGame.id}">
+                    <a href="/gamestats/${recentGame.id}">
                         <img src="${recentGame.cover}" alt="${recentGame.name}" class="img-responsive">
                         </a>
                 </div>

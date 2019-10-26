@@ -9,7 +9,8 @@ import pl.coderslab.boardpick.entity.Game;
 import pl.coderslab.boardpick.entity.Play;
 import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.*;
-
+import static java.util.stream.Collectors.*;
+import static java.util.Map.Entry.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,8 +44,27 @@ public class GameStatsController {
         model.addAttribute("game", game);
         model.addAttribute("playscount", gamePlaysCount(game));
 
-        System.out.println(playRepository.countGameWinner());
+        List<Play> playsByGame = playRepository.findAllByGame(game);
+        List<User> winnersByGame = new ArrayList<>();
 
+        for (Play play : playsByGame) {
+            winnersByGame.add(play.getWinner());
+        }
+
+        model.addAttribute("plays", playsByGame);
+
+        Map<User, Long> counts =
+                winnersByGame.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+
+        Map<User, Long> sortedCounts = counts
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .limit(3)
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+
+        model.addAttribute("wins", sortedCounts);
 
         return "gamestats";
     }

@@ -54,7 +54,7 @@ public class HomeController {
 
     @ModelAttribute("recentGames")
     public List<Game> getRecentGames() {
-        return gameRepository.findFirst10ByOrderByAddedToDbDesc();
+        return gameRepository.findFirst12ByOrderByAddedToDbDesc();
     }
 
     @ModelAttribute("users")

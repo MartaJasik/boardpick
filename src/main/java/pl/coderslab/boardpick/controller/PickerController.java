@@ -1,10 +1,14 @@
 package pl.coderslab.boardpick.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.boardpick.entity.Game;
+import pl.coderslab.boardpick.entity.Play;
 import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.*;
 
@@ -25,6 +29,9 @@ public class PickerController {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private PlayRepository playRepository;
 
     @Autowired
     private UserDao userDao;
@@ -115,8 +122,28 @@ public class PickerController {
             model.addAttribute("games", foundMyGames);
 
         } else if (category.equals("new")){
-            List<String> tenFound = advancedFinder(players, weight, time);
+            List<String> tenFound = new ArrayList<>();
 
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            if (!(auth instanceof AnonymousAuthenticationToken)) {
+                List<String> allFound = advancedFinder(players, weight, time, 15);
+                List<String> userGameId = new ArrayList<>();
+                Long userId = userDao.currentUserId();
+                Set<Game> set = gameRepository.findByUsersContains(userDao.findById(userId));
+                for (Game game:set) {
+                    userGameId.add(new Long(game.getId()).toString());
+                }
+                for(String string:allFound) {
+                    if (!userGameId.contains(string)) {
+                        tenFound.add(string);
+                    }
+                }
+
+            } else {
+                tenFound = advancedFinder(players, weight, time, 10);
+            }
             List<Game> gamesFound = new ArrayList<>();
             for (String id : tenFound) {
                 gamesFound.add(getGameLong(id));
@@ -133,10 +160,20 @@ public class PickerController {
         return gameRepository.findByUsersContains(user);
     }
 
+
+
 }
 
 
 
 
+/*  } else if (category.equals("new")){
+          List<String> tenFound = advancedFinder(players, weight, time);
 
+        List<Game> gamesFound = new ArrayList<>();
+        for (String id : tenFound) {
+        gamesFound.add(getGameLong(id));
+        }
+        model.addAttribute("games", gamesFound);
+        }*/
 

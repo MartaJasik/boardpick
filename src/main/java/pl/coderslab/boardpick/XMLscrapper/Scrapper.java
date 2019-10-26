@@ -3,10 +3,15 @@ package pl.coderslab.boardpick.XMLscrapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 import pl.coderslab.boardpick.entity.Game;
+import pl.coderslab.boardpick.entity.User;
+import pl.coderslab.boardpick.repository.GameDao;
+import pl.coderslab.boardpick.repository.GameRepository;
+import pl.coderslab.boardpick.repository.UserDao;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +27,7 @@ import static java.lang.Math.round;
 
 @Component
 public class Scrapper {
+
 
     public static List<String> findFirstTen(String gameToAdd) {
         List<String> idsFound = new ArrayList<>();
@@ -103,7 +110,9 @@ public class Scrapper {
         return game;
     }
 
-    public static List<String> advancedFinder(String players, String weight, String time) {
+
+
+    public static List<String> advancedFinder(String players, String weight, String time, Integer limit) {
         List<String> idsFound = new ArrayList<>();
         List<String> firstTenIdsFound = new ArrayList<>();
         String weightMin = "";
@@ -172,8 +181,8 @@ public class Scrapper {
                     idsFound.add(matcher.group(1));
                 }
             }
-            if (idsFound.size() > 10) {
-                firstTenIdsFound = idsFound.subList(0, 10);
+            if (idsFound.size() > limit) {
+                firstTenIdsFound = idsFound.subList(0, limit);
             } else {
                 firstTenIdsFound = idsFound;
             }
@@ -183,5 +192,6 @@ public class Scrapper {
         }
         return firstTenIdsFound;
     }
+
 
 }

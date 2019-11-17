@@ -1,12 +1,9 @@
 package pl.coderslab.boardpick.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.boardpick.entity.CurrentUser;
 import pl.coderslab.boardpick.entity.Game;
 import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.*;
@@ -68,7 +65,7 @@ public class CollectionController {
         Long userId = userDao.currentUserId();
         final Game game = getGameLong(id);
         Set<User> users = new HashSet<>();
-        users.add(userDao.findById(userId));
+        users.add(userRepository.findById(userId).orElse(new User()));
         game.setUsers(users);
         game.setAddedToDb(utilities.thisDate());
         gameDao.saveGame(game);
@@ -78,18 +75,14 @@ public class CollectionController {
 
     @ModelAttribute("mygames")
     public Set<Game> getMyGames() {
-        // return gameDao.findAll();
         Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
+        User user = userRepository.findById(currentUserId).orElse(new User());
         return gameRepository.findByUsersContains(user);
     }
 
     @ModelAttribute("count")
     public Integer howManyIOwn() {
-        Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
-        Set<Game> mySet = gameRepository.findByUsersContains(user);
-        return mySet.size();
+       return userDao.howManyIOwn();
     }
 
 }

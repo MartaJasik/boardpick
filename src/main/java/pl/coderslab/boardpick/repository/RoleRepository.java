@@ -7,5 +7,5 @@ import pl.coderslab.boardpick.entity.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
     Role findByName(String name);
-    Role findFirstById(int id);
+
 }

@@ -3,48 +3,32 @@ package pl.coderslab.boardpick.XMLscrapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.w3c.dom.Document;
 import pl.coderslab.boardpick.entity.Game;
-import pl.coderslab.boardpick.entity.User;
-import pl.coderslab.boardpick.repository.GameDao;
-import pl.coderslab.boardpick.repository.GameRepository;
-import pl.coderslab.boardpick.repository.UserDao;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Math.round;
 
 @Component
 public class Scrapper {
 
 
     public static List<String> findFirstTen(String gameToAdd) {
-        List<String> idsFound = new ArrayList<>();
+        List<String> idsFound;
+        Scrapper scrapper = new Scrapper();
         List<String> firstTenIdsFound = new ArrayList<>();
 
         try {
             org.jsoup.nodes.Document doc = Jsoup.connect("https://boardgamegeek.com/geeksearch.php?action=search&objecttype=boardgame&q=" + gameToAdd).get();
-            Elements newsHeadlines = doc.select(".collection_objectname");
-            for (Element headline : newsHeadlines) {
-                final String url = headline.select("a").attr("href");
-                // System.out.println(url);
-                Pattern pattern = Pattern.compile("^\\/boardgame\\/(.*)\\/.*$");
-                Matcher matcher = pattern.matcher(url);
-                while (matcher.find()) {
-                    idsFound.add(matcher.group(1));
-                }
-            }
+            idsFound = scrapper.findIds(doc);
+
             if (idsFound.size() > 10) {
                 firstTenIdsFound = idsFound.subList(0, 10);
             } else {
@@ -111,12 +95,14 @@ public class Scrapper {
     }
 
 
-
     public static List<String> advancedFinder(String players, String weight, String time, Integer limit) {
-        List<String> idsFound = new ArrayList<>();
+        List<String> idsFound;
         List<String> firstTenIdsFound = new ArrayList<>();
+        Scrapper scrapper = new Scrapper();
+
         String weightMin = "";
         String weightMax = "";
+
         switch (weight) {
             case "easy":
                 weightMin = "1";
@@ -171,16 +157,8 @@ public class Scrapper {
 
         try {
             org.jsoup.nodes.Document doc = Jsoup.connect("https://boardgamegeek.com/geeksearch.php?action=search&advsearch=1&objecttype=boardgame&q=&include%5Bdesignerid%5D=&geekitemname=&geekitemname=&include%5Bpublisherid%5D=&range%5Byearpublished%5D%5Bmin%5D=&range%5Byearpublished%5D%5Bmax%5D=&range%5Bminage%5D%5Bmax%5D=&floatrange%5Bavgrating%5D%5Bmin%5D=&floatrange%5Bavgrating%5D%5Bmax%5D=&range%5Bnumvoters%5D%5Bmin%5D=&floatrange%5Bavgweight%5D%5Bmin%5D=" + weightMin + "&floatrange%5Bavgweight%5D%5Bmax%5D=" + weightMax + "&range%5Bnumweights%5D%5Bmin%5D=&colfiltertype=&searchuser=&nosubtypes%5B%5D=boardgameexpansion&range%5Bminplayers%5D%5Bmax%5D=" + players + "&range%5Bmaxplayers%5D%5Bmin%5D=" + players + "&playerrangetype=normal&range%5Bleastplaytime%5D%5Bmin%5D=" + timeMin + "&range%5Bplaytime%5D%5Bmax%5D=" + timeMax + "&B1=Submit").get();
-            Elements newsHeadlines = doc.select(".collection_objectname");
-            for (Element headline : newsHeadlines) {
-                final String url = headline.select("a").attr("href");
-                // System.out.println(url);
-                Pattern pattern = Pattern.compile("^\\/boardgame\\/(.*)\\/.*$");
-                Matcher matcher = pattern.matcher(url);
-                while (matcher.find()) {
-                    idsFound.add(matcher.group(1));
-                }
-            }
+            idsFound = scrapper.findIds(doc);
+
             if (idsFound.size() > limit) {
                 firstTenIdsFound = idsFound.subList(0, limit);
             } else {
@@ -193,5 +171,17 @@ public class Scrapper {
         return firstTenIdsFound;
     }
 
-
+    private List<String> findIds(org.jsoup.nodes.Document doc) {
+        List<String> idsFound = new ArrayList<>();
+        Elements newsHeadlines = doc.select(".collection_objectname");
+        for (Element headline : newsHeadlines) {
+            final String url = headline.select("a").attr("href");
+            Pattern pattern = Pattern.compile("^\\/boardgame\\/(.*)\\/.*$");
+            Matcher matcher = pattern.matcher(url);
+            while (matcher.find()) {
+                idsFound.add(matcher.group(1));
+            }
+        }
+        return idsFound;
+    }
 }

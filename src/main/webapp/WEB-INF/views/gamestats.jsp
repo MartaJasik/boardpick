@@ -21,7 +21,7 @@
 
     <div class="row align-items-center h-100">
         <div class="col-4 mx-auto">
-            <a href="https://boardgamegeek.com/boardgame/${game.id}"><img height="400px"
+            <a target="_blank" href="https://boardgamegeek.com/boardgame/${game.id}"><img height="400px"
                                                                           src="${game.cover}"></a>
         </div>
         <div class="col-8" class="vertical-center">

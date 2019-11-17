@@ -27,7 +27,7 @@
 
 <div class="text-center">
     <br>
-    <footer style="color: gray">- Based on BoardGameGeek database -</footer>
+    <footer style="color: gray"><a style="color: gray" target="_blank" href="https://boardgamegeek.com/wiki/page/BGG_XML_API2">- Based on BoardGameGeek database -</a></footer>
     <br>
     <br>
 </div>

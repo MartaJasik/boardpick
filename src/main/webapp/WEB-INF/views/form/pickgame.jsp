@@ -90,7 +90,7 @@
         <tbody>
         <c:forEach var="game" items="${games}">
             <tr>
-                <td><a href="https://boardgamegeek.com/boardgame/${game.id}"><img height="100px" src="${game.cover}"></td>
+                <td><a target="_blank" href="https://boardgamegeek.com/boardgame/${game.id}"><img height="100px" src="${game.cover}"></td>
                 <td>${game.name}</td>
                 <td>${game.published}</td>
                 <td><c:choose>

@@ -33,7 +33,7 @@
         <tbody>
         <c:forEach var="usersGame" items="${userGames}">
             <tr>
-                <td><a href="https://boardgamegeek.com/boardgame/${usersGame.id}"><img height="100px"
+                <td><a target="_blank" href="https://boardgamegeek.com/boardgame/${usersGame.id}"><img height="100px"
                                                                                     src="${usersGame.cover}"></td>
                 <td>${usersGame.name}</td>
                 <td>${usersGame.published}</td>

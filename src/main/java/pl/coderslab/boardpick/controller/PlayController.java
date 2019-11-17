@@ -8,20 +8,13 @@ import pl.coderslab.boardpick.entity.Game;
 import pl.coderslab.boardpick.entity.Play;
 import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static pl.coderslab.boardpick.XMLscrapper.Scrapper.*;
 
 @Controller
 @RequestMapping("/plays")
 public class PlayController {
-
-    @Autowired
-    private GameDao gameDao;
 
     @Autowired
     private GameRepository gameRepository;
@@ -55,26 +48,24 @@ public class PlayController {
         return "redirect:/plays";
     }
 
-
     @ModelAttribute("mygames")
     public Set<Game> getMyGames() {
-        // return gameDao.findAll();
         Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
+        User user = userRepository.findById(currentUserId).orElse(new User());
         return gameRepository.findByUsersContains(user);
     }
 
     @ModelAttribute("myplays")
     public Set<Play> getMyPlays() {
         Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
+        User user = userRepository.findById(currentUserId).orElse(new User());
         return playRepository.findByPlayersContains(user);
     }
 
     @ModelAttribute("wincount")
     public Integer myWinCount() {
         Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
+        User user = userRepository.findById(currentUserId).orElse(new User());
         Set<Play> mySet = playRepository.findByWinner(user);
         return mySet.size();
     }
@@ -82,7 +73,7 @@ public class PlayController {
     @ModelAttribute("playscount")
     public Integer myPlaysCount() {
         Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
+        User user = userRepository.findById(currentUserId).orElse(new User());
         Set<Play> mySet = playRepository.findByPlayersContains(user);
         return mySet.size();
     }
@@ -90,10 +81,7 @@ public class PlayController {
 
     @ModelAttribute("count")
     public Integer howManyIOwn() {
-        Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
-        Set<Game> mySet = gameRepository.findByUsersContains(user);
-        return mySet.size();
+        return userDao.howManyIOwn();
     }
 
     @ModelAttribute("users")

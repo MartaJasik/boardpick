@@ -11,6 +11,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
  Set<Game> findByUsersContains(User user);
  List<Game> findFirst12ByOrderByAddedToDbDesc();
+ Game findById(long id);
 
 
 

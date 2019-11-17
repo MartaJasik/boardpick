@@ -8,12 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.boardpick.entity.Game;
-import pl.coderslab.boardpick.entity.Play;
 import pl.coderslab.boardpick.entity.User;
 import pl.coderslab.boardpick.repository.*;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,14 +21,9 @@ import static pl.coderslab.boardpick.XMLscrapper.Scrapper.*;
 @RequestMapping("/picker")
 public class PickerController {
 
-    @Autowired
-    private GameDao gameDao;
 
     @Autowired
     private GameRepository gameRepository;
-
-    @Autowired
-    private PlayRepository playRepository;
 
     @Autowired
     private UserDao userDao;
@@ -131,7 +123,7 @@ public class PickerController {
                 List<String> allFound = advancedFinder(players, weight, time, 15);
                 List<String> userGameId = new ArrayList<>();
                 Long userId = userDao.currentUserId();
-                Set<Game> set = gameRepository.findByUsersContains(userDao.findById(userId));
+                Set<Game> set = gameRepository.findByUsersContains(userRepository.findById(userId).orElse(new User()));
                 for (Game game:set) {
                     userGameId.add(new Long(game.getId()).toString());
                 }
@@ -156,24 +148,11 @@ public class PickerController {
 
     public Set<Game> getMyGames() {
         Long currentUserId = userDao.currentUserId();
-        User user = userDao.findById(currentUserId);
+        User user = userRepository.findById(currentUserId).orElse(new User());
         return gameRepository.findByUsersContains(user);
     }
 
 
 
 }
-
-
-
-
-/*  } else if (category.equals("new")){
-          List<String> tenFound = advancedFinder(players, weight, time);
-
-        List<Game> gamesFound = new ArrayList<>();
-        for (String id : tenFound) {
-        gamesFound.add(getGameLong(id));
-        }
-        model.addAttribute("games", gamesFound);
-        }*/
 
